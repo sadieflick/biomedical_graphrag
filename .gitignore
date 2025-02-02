@@ -1,0 +1,28 @@
+# MacOS
+.DS_Store
+
+# dotenv environment variables file
+.env
+
+# python debris
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Docker
+.dockerignore
+Dockerfile
+docker-compose.yaml
+
+# Langchain
+.langchain/
+
+# Neo4j
+neo4j_data/
+neo4j_logs/
+neo4j_plugins/
+*.db
+
+# models
+*.gguf
