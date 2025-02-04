@@ -44,7 +44,7 @@ pip install -r requirements.txt
 Download the Meditron model (7B version recommended)
 GGUF for lower memory environments can be found here: 
 https://huggingface.co/TheBloke/meditron-7B-GGUF
-Place in models/ directory
+Place in ```models/``` directory
 Update .env file with correct model path
 
 6. Configure Environment Variables
@@ -67,5 +67,5 @@ python main.py
 ```
 
 
-Contact
+### Contact
 sadieflick@gmail.com
