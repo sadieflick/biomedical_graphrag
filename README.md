@@ -1,4 +1,4 @@
-Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
+## Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
 Project Overview
 This project implements a Retrieval Augmented Generation (RAG) system for biomedical research, utilizing Neo4j knowledge graphs and Meditron language model.
 Prerequisites
@@ -8,21 +8,35 @@ Git
 Minimum 16GB RAM
 ~10GB free disk space
 
-Setup Instructions
+## Setup Instructions
 1. Clone the Repository
-bashCopygit clone https://github.com/sadieflick/biomedical-graphrag.git
+```
+bash git clone https://github.com/sadieflick/biomedical-graphrag.git
 cd biomedical-graphrag
+```
 2. Create Virtual Environment
 On Unix/MacOS:
-bashCopypython3 -m venv venv
+```
+bash python3 -m venv venv
 source venv/bin/activate
+```
+
 On Windows:
-powershellCopypython -m venv venv
+```
+powershell python -m venv venv
 .\venv\Scripts\activate
+```
+
 3. Upgrade pip
-bashCopypip install --upgrade pip
+```
+pip install --upgrade pip
+```
+
 4. Install Requirements
-bashCopypip install -r requirements.txt
+```
+pip install -r requirements.txt
+```
+
 5. Download Meditron Model
 
 Download the Meditron model (7B version recommended)
@@ -33,7 +47,10 @@ Update .env file with correct model path
 
 6. Configure Environment Variables
 Copy .env.example to .env and update with your configurations:
-bashCopycp .env.example .env
+```
+cp .env.example .env
+```
+
 # Edit .env with your specific settings
 7. Set Up Neo4j
 
@@ -43,7 +60,10 @@ Update Neo4j connection details in .env
 
 8. Run the Application
 # Ensure virtual environment is activated
+```
 python main.py
+```
+
 
 Contact
 sadieflick@gmail.com
