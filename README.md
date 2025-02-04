@@ -1,5 +1,5 @@
 ## Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
-Project Overview
+# Project Overview
 This project implements a Retrieval Augmented Generation (RAG) system for biomedical research, utilizing Neo4j knowledge graphs and Meditron language model.
 Prerequisites
 
@@ -11,13 +11,13 @@ Minimum 16GB RAM
 ## Setup Instructions
 1. Clone the Repository
 ```
-bash git clone https://github.com/sadieflick/biomedical-graphrag.git
+git clone https://github.com/sadieflick/biomedical-graphrag.git
 cd biomedical-graphrag
 ```
 2. Create Virtual Environment
 On Unix/MacOS:
 ```
-bash python3 -m venv venv
+python3 -m venv venv
 source venv/bin/activate
 ```
 
