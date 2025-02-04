@@ -1,12 +1,14 @@
 ## Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
+
 # Project Overview
 This project implements a Retrieval Augmented Generation (RAG) system for biomedical research, utilizing Neo4j knowledge graphs and Meditron language model.
-Prerequisites
 
-Python 3.10+
-Git
-Minimum 16GB RAM
-~10GB free disk space
+# Prerequisites
+
+- Python 3.10+
+- Git
+- Minimum 16GB RAM
+- ~10GB free disk space
 
 ## Setup Instructions
 1. Clone the Repository
@@ -23,7 +25,7 @@ source venv/bin/activate
 
 On Windows:
 ```
-powershell python -m venv venv
+python -m venv venv
 .\venv\Scripts\activate
 ```
 
