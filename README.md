@@ -1,4 +1,5 @@
-# Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
+# Biomedical GraphRAG: 
+### Knowledge Graph Retrieval Augmented Generation, for biomedical application
 
 ## Project Overview
 This project implements a Retrieval Augmented Generation (RAG) system for biomedical research, utilizing Neo4j knowledge graphs and Meditron language model.
