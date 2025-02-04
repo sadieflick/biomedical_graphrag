@@ -1,16 +1,16 @@
-## Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
+# Biomedical GraphRAG: Knowledge Graph Retrieval Augmented Generation
 
-# Project Overview
+## Project Overview
 This project implements a Retrieval Augmented Generation (RAG) system for biomedical research, utilizing Neo4j knowledge graphs and Meditron language model.
 
-# Prerequisites
+### Prerequisites
 
 - Python 3.10+
 - Git
 - Minimum 16GB RAM
 - ~10GB free disk space
 
-## Setup Instructions
+### Setup Instructions
 1. Clone the Repository
 ```
 git clone https://github.com/sadieflick/biomedical-graphrag.git
@@ -53,7 +53,7 @@ Copy .env.example to .env and update with your configurations:
 cp .env.example .env
 ```
 
-# Edit .env with your specific settings
+### Edit .env with your specific settings
 7. Set Up Neo4j
 
 Install Neo4j Desktop or use a local Neo4j instance
@@ -61,7 +61,7 @@ Create a database for the project
 Update Neo4j connection details in .env
 
 8. Run the Application
-# Ensure virtual environment is activated
+### Ensure virtual environment is activated
 ```
 python main.py
 ```
