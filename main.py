@@ -54,7 +54,7 @@ class BiomedicalGraphRAG:
                 logger.info("Neo4j test query successful")
             
             # Test LLM
-            test_response = self.llm("Test query: What is DNA?")
+            test_response = self.llm("What is the GWAS p-value for the association between childhood-onset asthma and RORA?")
             assert test_response is not None
             logger.info("LLM test query successful")
             
