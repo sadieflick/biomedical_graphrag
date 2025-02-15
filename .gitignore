@@ -24,5 +24,8 @@ neo4j_logs/
 neo4j_plugins/
 *.db
 
+# chainlit
+.chainlit
+
 # models
 *.gguf

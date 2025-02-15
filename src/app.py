@@ -1,10 +1,17 @@
-# src/main.py
 import sys
 import logging
-from config.config import Config
+from .. import Config
 from pathlib import Path
+from typing import cast
 from neo4j import GraphDatabase
-from src.llm_setup import initialize_meditron
+from src.llm_setup import *
+from langchain_openai import ChatOpenAI
+from langchain.prompts import ChatPromptTemplate
+from langchain.schema import StrOutputParser
+from langchain.schema.runnable import Runnable
+from langchain.schema.runnable.config import RunnableConfig
+
+import chainlit as cl
 
 # Setup logging
 logging.basicConfig(
@@ -71,35 +78,36 @@ class BiomedicalGraphRAG:
         logger.info("Cleanup completed")
 
 def main():
-    # Initialize the system
-    system = BiomedicalGraphRAG()
     
-    if not system.initialize():
-        logger.error("Failed to initialize the system")
-        sys.exit(1)
-    
-    if not system.test_system():
-        logger.error("System tests failed")
-        system.cleanup()
-        sys.exit(1)
-    
-    logger.info("System initialized and tested successfully")
-    
-    # Keep system running for interactive use
-    try:
-        while True:
-            query = input("\nEnter a query (or 'exit' to quit): ")
-            if query.lower() == 'exit':
-                break
-            
-            response = system.llm(query)
-            print("\nResponse:", response)
-            
-    except KeyboardInterrupt:
-        print("\nShutting down...")
-    
-    finally:
-        system.cleanup()
+    @cl.on_chat_start
+    async def on_chat_start():
+        system = BiomedicalGraphRAG()
+        model = system.llm
+        prompt = ChatPromptTemplate.from_messages(
+            [
+                (
+                    "system",
+                    "You're a very knowledgeable historian who provides accurate and eloquent answers to historical questions.",
+                ),
+                ("human", "{question}"),
+            ]
+        )
+        runnable = create_biomedical_chain(model)
+        cl.user_session.set("runnable", runnable)
+
+    @cl.on_message
+    async def on_message(message: cl.Message):
+        runnable = cast(Runnable, cl.user_session.get("runnable"))  # type: Runnable
+
+        msg = cl.Message(content="")
+
+        async for chunk in runnable.astream(
+            {"question": message.content},
+            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler()]),
+        ):
+            await msg.stream_token(chunk)
+
+        await msg.send()
 
 if __name__ == "__main__":
     main()

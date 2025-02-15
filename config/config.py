@@ -12,7 +12,11 @@ class Config:
         }
         
         self.llm = {
-            'model_path': os.getenv('MODEL_PATH'),
-            'temperature': 0.75,
+            'model': os.getenv('MODEL'),
+            'temperature': 0.0,
             'max_tokens': 2000,
+            'api_key': os.getenv('OPENAI_API_KEY'),
+            'max_retries': 2,
+
         }
+
