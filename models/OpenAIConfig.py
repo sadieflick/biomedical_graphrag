@@ -1,18 +1,18 @@
 # langchain and env vars
 from typing import Dict, Any
-import os, openai
-from config.config import Config
+import os
+from config.objects import Config
 from langchain.chat_models import ChatOpenAI, init_chat_model
-from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 from langchain.prompts import PromptTemplate
 from langchain.chains import LLMChain
 from dotenv import load_dotenv, find_dotenv
+from typing import ClassVar
 
-class OpenAIModel:
+class OpenAIModel(ChatOpenAI):
     """Configuration for OpenAI model."""
 
-    default_config = {
+    default_config: ClassVar[dict] = {
         "model":"gpt-4o",
         "temperature":0,
         "max_tokens":None,
@@ -25,7 +25,7 @@ class OpenAIModel:
         ### Be sure to add any other params to your env variables
         }
     
-    def __init__(self, config: Dict[str, Any] = None):
+    def __init__(self, settings: Dict[str, Any] = None):
 
         _ = load_dotenv(find_dotenv()) # read local .env file
 
@@ -35,14 +35,9 @@ class OpenAIModel:
         except ValueError as e:
             print(e)
         
-        
-        openai.api_key = os.environ['OPENAI_API_KEY']
-
-        
-        config = self.default_config
-        config.update(Config().llm)
+        if settings == None:
+            settings = self.default_config
+        settings.update(Config().llm)
         
         # Initialize model
-        model = init_chat_model(**config)
-        
-        return model
+        self = init_chat_model(**settings, streaming=True)

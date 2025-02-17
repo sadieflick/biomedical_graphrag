@@ -20,3 +20,5 @@ class Config:
 
         }
 
+        print(f'\n\n\n=========== SETTINGS IN CONFIG OBJ: {self.llm} ==============\n\n\n')
+

@@ -1,17 +1,18 @@
 import sys
 import logging
-from .. import Config
+import chainlit as cl
 from pathlib import Path
+from config.objects import Config
+from models.OpenAIConfig import OpenAIModel
 from typing import cast
 from neo4j import GraphDatabase
 from src.llm_setup import *
-from langchain_openai import ChatOpenAI
+from langchain_community.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain.schema import StrOutputParser
 from langchain.schema.runnable import Runnable
 from langchain.schema.runnable.config import RunnableConfig
 
-import chainlit as cl
 
 # Setup logging
 logging.basicConfig(
@@ -22,9 +23,11 @@ logger = logging.getLogger(__name__)
 
 class BiomedicalGraphRAG:
     def __init__(self):
-        self.config = Config()
-        self.llm = None
+        print(type(objects))
+        self.settings = Config()
+        self.llm = initialize_model()
         self.neo4j_driver = None
+        
         
     def initialize(self):
         """Initialize all components of the system"""
@@ -34,15 +37,15 @@ class BiomedicalGraphRAG:
             # Initialize Neo4j connection
             logger.info("Connecting to Neo4j...")
             self.neo4j_driver = GraphDatabase.driver(
-                self.config.neo4j['uri'],
-                auth=(self.config.neo4j['user'], self.config.neo4j['password'])
+                self.settings.neo4j['uri'],
+                auth=(self.settings.neo4j['user'], self.settings.neo4j['password'])
             )
             self.neo4j_driver.verify_connectivity()
             logger.info("Neo4j connection established successfully")
             
             # Initialize LLM
             logger.info("Initializing LLM...")
-            self.llm = initialize_meditron(self.config.llm)
+            self.llm = OpenAIConfig.OpenAIModel(self.settings)
             logger.info("LLM initialized successfully")
             
             return True
@@ -77,37 +80,28 @@ class BiomedicalGraphRAG:
             self.neo4j_driver.close()
         logger.info("Cleanup completed")
 
-def main():
-    
-    @cl.on_chat_start
-    async def on_chat_start():
-        system = BiomedicalGraphRAG()
-        model = system.llm
-        prompt = ChatPromptTemplate.from_messages(
-            [
-                (
-                    "system",
-                    "You're a very knowledgeable historian who provides accurate and eloquent answers to historical questions.",
-                ),
-                ("human", "{question}"),
-            ]
-        )
-        runnable = create_biomedical_chain(model)
-        cl.user_session.set("runnable", runnable)
 
-    @cl.on_message
-    async def on_message(message: cl.Message):
-        runnable = cast(Runnable, cl.user_session.get("runnable"))  # type: Runnable
+print(f'************{__name__}*****************')
+@cl.on_chat_start
+async def on_chat_start():
+    system = BiomedicalGraphRAG()
+    model = system.llm
+    runnable = create_biomedical_chain(model)
+    cl.user_session.set("runnable", runnable)
 
-        msg = cl.Message(content="")
+@cl.on_message
+async def on_message(message: cl.Message):
+    runnable = cast(Runnable, cl.user_session.get("runnable"))  # type: Runnable
 
-        async for chunk in runnable.astream(
-            {"question": message.content},
-            config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler()]),
-        ):
-            await msg.stream_token(chunk)
+    msg = cl.Message(content="")
 
-        await msg.send()
+    async for chunk in runnable.astream(
+        {"query": message.content, "graph_context": None},
+        config=RunnableConfig(callbacks=[cl.LangchainCallbackHandler()]),
+    ):
+        await msg.stream_token(chunk)
 
-if __name__ == "__main__":
-    main()
+    await msg.send()
+
+# if __name__ == "__main__":
+#     main()

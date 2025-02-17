@@ -1,8 +1,11 @@
 # src/llm_setup.py
 import os
+import config.objects as objects
 from typing import Dict, Any
 from models import OpenAIConfig
-from config.config import Config
+from config.objects import Config
+from langchain.schema import StrOutputParser
+from langchain.chat_models import ChatOpenAI
 from langchain.llms import LlamaCpp
 from langchain.callbacks.manager import CallbackManager
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
@@ -17,15 +20,19 @@ def initialize_model():
     Returns:
         model instance
     """
-    try:
-        if os.environ.get('MODEL_TYPE') == 'OpenAI':
-            llm = OpenAIConfig.OpenAIModel()
+    llm_settings = Config().llm
+    llm = ChatOpenAI(**llm_settings)
+    # try:
+    #     # llm_settings = Config().llm
+    #     # llm = None
+    #     # if os.environ.get('MODEL_TYPE') == 'OpenAI':
+    #     # llm = OpenAIConfig.OpenAIModel(llm_settings)
+    #     # print(f"**************llm**************\n{llm}")
         
-        # TO DO: Add other model logic as needed
-        else:
-            raise(Exception('Something went wrong with instantiating the model. Be sure the model type is supported, and that the environment variable MODEL_TYPE exits.'))
-    except Exception as err:
-        print(f"Unexpected {err=}, {type(err)=}")
+    #     # TO DO: Add other model logic as needed
+    #     # raise(Exception('Something went wrong with instantiating the model. Be sure the model type is supported, and that the environment variable MODEL_TYPE exits.'))
+    # except Exception as err:
+    #     print(f"Unexpected {err=}, {type(err)=}")
     
     return llm
 
@@ -54,13 +61,13 @@ def create_biomedical_chain(llm):
         input_variables=["graph_context", "query"]
     )
     
-    return prompt | llm
+    return prompt | llm | StrOutputParser
 
 def get_model_info():
     """
     Get information about the current model configuration.
     """
-    llm_config = Config().llm
+    llm_config = objects().llm
     return llm_config
 
 # Example usage and testing function
