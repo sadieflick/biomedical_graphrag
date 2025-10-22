@@ -81,7 +81,7 @@ class BiomedicalGraphRAG:
         logger.info("Cleanup completed")
 
 
-print(f'************{__name__}*****************')
+
 @cl.on_chat_start
 async def on_chat_start():
     system = BiomedicalGraphRAG()
